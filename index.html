@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anwar Sadiq — Flutter Developer</title>
+<meta name="description" content="Anwar Sadiq, Flutter developer and co-founder/CTO of Evide. Builds real-time GPS tracking apps used by 14,000+ people in Kerala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#030806;        /* night sky over the depot */
+    --panel:#0A1A13;      /* bus-shelter panel */
+    --route:#1B3B2C;      /* route line */
+    --amber:#2EE59D;      /* LED destination board */
+    --text:#E6EDF5;
+    --muted:#97A8BC;
+    --font:"Familjen Grotesk", system-ui, sans-serif;
+    --led:"DotGothic16", monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:radial-gradient(rgba(46,229,157,.07) 1px, transparent 1.4px) 0 0/24px 24px, radial-gradient(1100px 600px at 100% 120%, rgba(16,120,80,.16), transparent 60%), #030806;background-attachment:fixed;color:var(--text);font-family:var(--font);font-size:18px;line-height:1.55}
+  a{color:var(--amber);text-underline-offset:3px}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+  h2{font-size:2rem;line-height:1.15;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  .lede{color:var(--muted);max-width:60ch;margin:0 0 40px}
+  section{padding:88px 0;border-top:1px solid var(--route)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:64px 0 72px}
+  .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+  .board{background:#020604;border:6px solid #123326;border-radius:10px;padding:22px 26px;box-shadow:inset 0 0 40px rgba(46,229,157,.08)}
+  .board-route{font-family:var(--led);color:var(--amber);font-size:1.05rem;opacity:.75;margin:0 0 6px}
+  .board h1{font-family:var(--led);font-weight:400;color:var(--amber);font-size:clamp(2.2rem,6.4vw,4.4rem);line-height:1.05;margin:0;
+    text-shadow:0 0 12px rgba(46,229,157,.45);letter-spacing:.04em}
+  .board-sub{font-family:var(--led);color:var(--amber);font-size:clamp(1rem,2.4vw,1.4rem);margin:8px 0 0;opacity:.9}
+  .hero-text{font-size:1.25rem;max-width:44ch;margin:28px 0 28px}
+  .actions{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-block;padding:12px 20px;border-radius:8px;font-weight:600;text-decoration:none;border:2px solid var(--amber)}
+  .btn-primary{background:var(--amber);color:var(--ink)}
+  .btn-ghost{color:var(--amber)}
+  .photo{width:220px;height:220px;border-radius:50%;border:4px solid var(--route);overflow:hidden;background:var(--panel);
+    display:grid;place-items:center;font-family:var(--led);font-size:3rem;color:var(--amber)}
+  .photo{position:relative}
+  .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
+
+  /* the one moving thing: a bus dot running the hero route */
+  .live-route{position:relative;height:28px;margin-top:40px}
+  .live-route::before{content:"";position:absolute;left:0;right:0;top:13px;height:2px;background:var(--route)}
+  .stop{position:absolute;top:8px;width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--route)}
+  .bus{position:absolute;top:5px;left:0;width:18px;height:18px;border-radius:50%;background:var(--amber);
+    box-shadow:0 0 0 6px rgba(46,229,157,.18);animation:drive 9s ease-in-out infinite alternate}
+  @keyframes drive{from{left:0}to{left:calc(100% - 18px)}}
+  .live-label{font-size:.9rem;color:var(--muted);margin-top:8px}
+
+  /* ---------- Apps ---------- */
+  .app{display:flex;flex-direction:column-reverse;gap:24px;padding:36px 0;border-bottom:1px solid var(--route)}
+  .app:last-child{border-bottom:0}
+  .shots{margin:0;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+  .shots.wide img{flex:0 0 360px;width:360px;aspect-ratio:16/9;border-radius:10px}
+  .shots img{flex:0 0 200px;width:200px;aspect-ratio:9/19;object-fit:cover;display:block;border-radius:22px;border:3px solid var(--route);background:var(--panel);scroll-snap-align:start}
+  .app h3{font-size:1.5rem;margin:0 0 6px}
+  .app .what{margin:0 0 12px;max-width:58ch}
+  .stat{font-size:1.1rem;font-weight:600;color:var(--amber);margin:0 0 12px}
+  .stack{color:var(--muted);font-size:.95rem;margin:0 0 14px}
+  .status{display:inline-block;font-size:.85rem;padding:2px 10px;border-radius:20px;border:1px solid var(--route);color:var(--muted);margin-left:8px;vertical-align:middle}
+
+  /* ---------- Route (career timeline: a real sequence) ---------- */
+  .timeline{list-style:none;margin:0;padding:0 0 0 36px;position:relative}
+  .timeline::before{content:"";position:absolute;left:11px;top:8px;bottom:8px;width:3px;background:var(--route)}
+  .timeline li{position:relative;padding:0 0 40px}
+  .timeline li::before{content:"";position:absolute;left:-32px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid var(--amber)}
+  .timeline li.next::before{border-style:dashed;border-color:var(--muted)}
+  .when{color:var(--muted);font-size:.95rem}
+  .timeline h3{margin:2px 0 6px;font-size:1.25rem}
+  .timeline p{margin:0;max-width:60ch}
+
+  /* ---------- Skills ---------- */
+  .skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
+  .skills h3{font-size:1.05rem;margin:0 0 8px;color:var(--amber)}
+  .skills ul{list-style:none;margin:0;padding:0;color:var(--text)}
+  .skills li{padding:3px 0}
+
+  /* ---------- Contact ---------- */
+  .contact p{max-width:55ch}
+  .contact .actions{margin-top:20px}
+  footer{padding:32px 0;color:var(--muted);font-size:.9rem;border-top:1px solid var(--route)}
+
+  @media (max-width:760px){
+    body{font-size:17px}
+    .hero-grid{grid-template-columns:1fr}
+    .photo{width:140px;height:140px;order:-1}
+    .shots img{flex-basis:170px;width:170px}
+    section{padding:64px 0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .bus{animation:none;left:calc(70% - 9px)}
+    html{scroll-behavior:auto}
+  }
+
+  /* ---------- Emerald radiant extras ---------- */
+  .hero{position:relative;overflow:hidden;isolation:isolate}
+  .aurora{position:absolute;inset:-20% -10% auto -10%;height:120%;z-index:-1;pointer-events:none;filter:blur(70px);opacity:.85}
+  .aurora span{position:absolute;border-radius:50%}
+  .aurora .a1{width:620px;height:420px;left:-80px;top:-120px;background:radial-gradient(closest-side,rgba(46,229,157,.55),transparent);animation:drift1 22s ease-in-out infinite alternate}
+  .aurora .a2{width:520px;height:380px;right:0;top:40px;background:radial-gradient(closest-side,rgba(14,165,110,.45),transparent);animation:drift2 26s ease-in-out infinite alternate}
+  .aurora .a3{width:460px;height:300px;left:35%;top:260px;background:radial-gradient(closest-side,rgba(120,255,200,.22),transparent);animation:drift1 30s ease-in-out infinite alternate-reverse}
+  @keyframes drift1{to{transform:translate(120px,60px) scale(1.15)}}
+  @keyframes drift2{to{transform:translate(-140px,80px) scale(.9)}}
+
+  /* LED board: real dot-matrix pixels + one power-on flicker */
+  .board{position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(46,229,157,.15),0 30px 80px -30px rgba(46,229,157,.45),inset 0 0 50px rgba(46,229,157,.08)}
+  .board::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(circle,transparent 55%,rgba(2,6,4,.55) 60%) 0 0/4px 4px}
+  .board h1{animation:power 1.4s steps(1) 1 both}
+  @keyframes power{0%{opacity:0}10%{opacity:.9}14%{opacity:.2}22%{opacity:1}30%{opacity:.5}36%,100%{opacity:1}}
+
+  /* glowing route map replaces the straight line */
+  .route-map{display:block;width:100%;height:auto;margin-top:36px;overflow:visible}
+  .route-map .road{fill:none;stroke:#123326;stroke-width:10;stroke-linecap:round}
+  .route-map .line{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 10;opacity:.7;animation:flow 1.6s linear infinite}
+  @keyframes flow{to{stroke-dashoffset:-32}}
+  .route-map .stopdot{fill:#030806;stroke:var(--amber);stroke-width:3}
+  .route-map .busdot{fill:var(--amber);filter:drop-shadow(0 0 8px rgba(46,229,157,.9))}
+  .route-map .halo{fill:rgba(46,229,157,.18)}
+
+  /* screenshots sit on their own pool of light */
+  .shots{position:relative;padding:18px 0 10px}
+  .app{position:relative}
+  .app::before{content:"";position:absolute;left:-60px;bottom:-20px;width:520px;height:360px;z-index:-1;
+    background:radial-gradient(closest-side,rgba(46,229,157,.14),transparent);pointer-events:none}
+  .shots img{box-shadow:0 20px 50px -20px rgba(0,0,0,.9),0 0 0 1px rgba(46,229,157,.12)}
+  #apps,#route{isolation:isolate}
+
+  /* career route glows from past to future */
+  .timeline::before{background:linear-gradient(var(--amber),rgba(46,229,157,.15))}
+  .timeline li::before{box-shadow:0 0 12px rgba(46,229,157,.55)}
+  .timeline li.next::before{box-shadow:none;animation:ping 2.4s ease-out infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(46,229,157,.5)}100%{box-shadow:0 0 0 16px rgba(46,229,157,0)}}
+
+  .btn-primary{box-shadow:0 0 24px rgba(46,229,157,.35)}
+
+  @media (prefers-reduced-motion:reduce){
+    .aurora span,.board h1,.route-map .line,.timeline li.next::before{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="board" role="img" aria-label="Destination board: Anwar Sadiq, Flutter developer">
+          <p class="board-route" aria-hidden="true">Route 007</p>
+          <h1>ANWAR SADIQ</h1>
+          <p class="board-sub" aria-hidden="true">FLUTTER DEVELOPER</p>
+        </div>
+        <p class="hero-text">I build real-time tracking apps in Flutter. My Evide bus app has 14,000+ downloads and shows commuters in Kerala where their bus is right now.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="assets/Anwar-sadiq-CV.pdf" download>Download CV</a>
+          <a class="btn btn-ghost" href="#apps">See my apps</a>
+          <a class="btn btn-ghost" href="mailto:anuanwar756@gmail.com">Email me</a>
+        </div>
+      </div>
+      <div class="photo">
+        <img src="assets/anwar.png" alt="Anwar Sadiq" onerror="this.remove()">
+        <span aria-hidden="true">AS</span>
+      </div>
+    </div>
+    <svg class="route-map" viewBox="0 0 1000 96" aria-hidden="true">
+      <path id="rt" class="road" d="M8,70 C120,10 230,86 360,48 S600,8 700,46 S880,90 992,26"/>
+      <path class="line" d="M8,70 C120,10 230,86 360,48 S600,8 700,46 S880,90 992,26"/>
+      <g id="stops"></g>
+      <g id="bus"><circle class="halo" r="16"/><circle class="busdot" r="8"/>
+        <animateMotion id="drive" dur="18s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="linear"><mpath href="#rt"/></animateMotion></g>
+    </svg>
+    <p class="live-label">Co-founder and CTO at Evide · Kerala, India · Open to relocating within the EU</p>
+  </div>
+</header>
+
+<main>
+  <section id="apps">
+    <div class="wrap">
+      <h2>Apps I've shipped</h2>
+      <p class="lede">The mobile apps are built in Flutter and live on Google Play. I wrote most of them solo, from the first MVP to release.</p>
+
+      <article class="app">
+        <figure class="shots"><img src="assets/screens/evide-bus/1.png" alt="Evide bus app, screen 1" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-bus/2.png" alt="Evide bus app, screen 2" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-bus/3.png" alt="Evide bus app, screen 3" loading="lazy" onerror="hideShot(this)"></figure>
+        <div>
+          <h3>Evide — live bus tracking</h3>
+          <p class="stat">14,000+ downloads · ~300 active users</p>
+          <p class="what">Commuters see private buses move on the map in real time, with arrival estimates, routes and stops. 12 buses stream live GPS, and timetables cover 70+ more.</p>
+          <p class="stack">Flutter · Bloc · Firebase Realtime Database · Google Maps SDK · GPS hardware integration</p>
+          <a href="https://play.google.com/store/apps/details?id=com.evide.evide_ai">View on Google Play</a>
+        </div>
+      </article>
+
+      <article class="app">
+        <figure class="shots"><img src="assets/screens/evide-boss/1.png" alt="Evide Boss app, screen 1" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-boss/2.png" alt="Evide Boss app, screen 2" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-boss/3.png" alt="Evide Boss app, screen 3" loading="lazy" onerror="hideShot(this)"></figure>
+        <div>
+          <h3>Evide Boss — fleet app for bus owners</h3>
+          <p class="what">Bus owners manage their fleet and watch every bus live from one app.</p>
+          <p class="stack">Flutter · Bloc · Firestore · Google Maps SDK</p>
+          <a href="https://play.google.com/store/apps/details?id=com.evide.evde_boss">View on Google Play</a>
+        </div>
+      </article>
+
+      <article class="app">
+        <figure class="shots"><img src="assets/screens/evide-school-bus/1.png" alt="Evide School Bus app, screen 1" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-school-bus/2.png" alt="Evide School Bus app, screen 2" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/evide-school-bus/3.png" alt="Evide School Bus app, screen 3" loading="lazy" onerror="hideShot(this)"></figure>
+        <div>
+          <h3>Evide School Bus <span class="status">Rolling out to schools</span></h3>
+          <p class="what">Parents follow their child's school bus live. A companion driver app shares the bus location during each trip.</p>
+          <p class="stack">Flutter · Bloc · Firebase · Google Maps SDK · AWS (EC2, S3)</p>
+          <a href="https://play.google.com/store/apps/details?id=in.evide.school.parent">Parent app</a> &nbsp;·&nbsp;
+          <a href="https://play.google.com/store/apps/details?id=in.evide.school.driver">Driver app</a>
+        </div>
+      </article>
+
+      <article class="app">
+        <figure class="shots wide"><img src="assets/screens/sky-feet/1.png" alt="Sky Feet Aviation website, screen 1" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/sky-feet/2.png" alt="Sky Feet Aviation website, screen 2" loading="lazy" onerror="hideShot(this)"><img src="assets/screens/sky-feet/3.png" alt="Sky Feet Aviation website, screen 3" loading="lazy" onerror="hideShot(this)"></figure>
+        <div>
+          <h3>Sky Feet Aviation website</h3>
+          <p class="what">A mobile-responsive site for an aviation training institute. I designed, built, deployed and tested it.</p>
+          <p class="stack">WordPress · custom code · responsive design</p>
+          <a href="https://skyfeetaviation.com">Visit the site</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="route">
+    <div class="wrap">
+      <h2>My route so far</h2>
+      <p class="lede">From e-commerce operations to leading tech at a mobility startup.</p>
+      <ol class="timeline">
+        <li>
+          <span class="when">2023 – 2024</span>
+          <h3>E-commerce Assistant, Abrar Ventures</h3>
+          <p>Ran listings, orders and stock across 7 marketplaces, including an Amazon FBA warehouse, while teaching myself Flutter in the evenings.</p>
+        </li>
+        <li>
+          <span class="when">Oct 2024</span>
+          <h3>Co-founder and CTO, Evide</h3>
+          <p>Built Evide's first MVP solo, then every app after it: commuter tracking, driver tools and the owner fleet app. Evide won a ₹1 lakh grant at the Jain University pitchathon.</p>
+        </li>
+        <li>
+          <span class="when">2026</span>
+          <h3>Evide School Bus</h3>
+          <p>Shipped a parent and driver app pair for Kerala private schools, backed by Firebase and AWS.</p>
+        </li>
+        <li class="next">
+          <span class="when">Next stop</span>
+          <h3>A Flutter team in Europe</h3>
+          <p>I'm looking for a mid-level Flutter role and can relocate. BSc Computer Science, final exam Jan–Feb 2027.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <h2>What I work with</h2>
+      <div class="skills">
+        <div><h3>Mobile</h3><ul><li>Flutter and Dart</li><li>Bloc / Cubit</li><li>Android and iOS builds</li><li>Play Store releases</li></ul></div>
+        <div><h3>Maps and location</h3><ul><li>Google Maps SDK</li><li>Mapbox / OpenStreetMap</li><li>Real-time GPS tracking</li></ul></div>
+        <div><h3>Backend and data</h3><ul><li>Firestore</li><li>Firebase Realtime Database</li><li>AWS EC2 and S3</li><li>REST APIs</li></ul></div>
+        <div><h3>Tools</h3><ul><li>Git and GitHub</li><li>GitHub Actions CI/CD</li><li>Postman</li><li>WordPress</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <h2>Let's talk</h2>
+      <p>If your team needs someone who has taken real-time apps from idea to thousands of users, I'd like to hear from you. I reply within a day.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="mailto:anuanwar756@gmail.com">anuanwar756@gmail.com</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/anwar-sadiq-3259ab2b1">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/Anwar-007">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Anwar Sadiq · Kottakkal, Kerala, India</div>
+</footer>
+
+<script>
+  function hideShot(img){var f=img.parentElement;img.remove();if(!f.querySelector('img'))f.style.visibility='hidden';}
+  (function(){
+    var p=document.getElementById('rt'),g=document.getElementById('stops');if(!p)return;
+    var L=p.getTotalLength();
+    [0,.22,.47,.72,1].forEach(function(t){var pt=p.getPointAtLength(L*t);
+      var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',pt.x);c.setAttribute('cy',pt.y);c.setAttribute('r',7);c.setAttribute('class','stopdot');g.appendChild(c);});
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      var a=document.getElementById('drive');a.parentNode.removeChild(a);
+      var pt=p.getPointAtLength(L*.6);document.getElementById('bus').setAttribute('transform','translate('+pt.x+','+pt.y+')');}
+  })();
+</script>
+</body>
+</html>
